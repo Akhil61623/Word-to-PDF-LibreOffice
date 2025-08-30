@@ -1,17 +1,13 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
-# Install LibreOffice
-RUN apt-get update && apt-get install -y libreoffice && rm -rf /var/lib/apt/lists/*
+# LibreOffice install
+RUN apt-get update && apt-get install -y libreoffice && apt-get clean
 
-# Set workdir
-WORKDIR /app
-
-# Copy requirements
-COPY requirements.txt requirements.txt
+# Python requirements
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy app
 COPY . .
 
-# Run app with gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000"]
+CMD ["gunicorn", "app:app"]
